@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grand Canyon Training Guide</title>
+<style>
+  :root { --green: #2d6a4f; --bg: #fafaf8; --card: #fff; --text: #1a1a1a; --muted: #666; --accent: #d4a373; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; padding-bottom: 4rem; }
+  
+  header { background: linear-gradient(135deg, var(--green), #1b4332); color: white; padding: 2rem 1.5rem; text-align: center; }
+  header h1 { font-size: 1.6rem; margin-bottom: 0.3rem; }
+  header p { opacity: 0.85; font-size: 0.95rem; }
+  
+  .week-badge { display: inline-block; background: var(--accent); color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600; margin: 0.5rem 0; }
+  
+  nav { display: flex; overflow-x: auto; gap: 0.5rem; padding: 1rem; background: white; border-bottom: 1px solid #e0e0e0; position: sticky; top: 0; z-index: 10; }
+  nav a { flex-shrink: 0; padding: 0.5rem 1rem; border-radius: 20px; text-decoration: none; color: var(--green); border: 1.5px solid var(--green); font-size: 0.85rem; font-weight: 500; white-space: nowrap; }
+  nav a:hover, nav a.active { background: var(--green); color: white; }
+  
+  section { padding: 1rem 1rem; max-width: 700px; margin: 0 auto; }
+  section h2 { color: var(--green); font-size: 1.3rem; margin: 1.5rem 0 0.5rem; padding-bottom: 0.3rem; border-bottom: 2px solid var(--green); }
+  section h3 { color: var(--text); font-size: 1.05rem; margin: 1.2rem 0 0.4rem; }
+  
+  .exercise-card { background: var(--card); border-radius: 12px; padding: 1rem; margin: 0.8rem 0; box-shadow: 0 1px 4px rgba(0,0,0,0.08); border-left: 4px solid var(--green); }
+  .exercise-card h4 { font-size: 1rem; margin-bottom: 0.3rem; }
+  .exercise-card .sets { color: var(--green); font-weight: 600; font-size: 0.95rem; margin-bottom: 0.4rem; }
+  .exercise-card .progression { background: #f0f7f4; padding: 0.4rem 0.6rem; border-radius: 8px; font-size: 0.85rem; margin: 0.4rem 0; }
+  .exercise-card .progression span { font-weight: 600; }
+  .exercise-card .cues { font-size: 0.9rem; color: var(--muted); margin-top: 0.4rem; }
+  .exercise-card .cues li { margin: 0.2rem 0 0.2rem 1.2rem; }
+  .video-link { display: inline-flex; align-items: center; gap: 0.3rem; background: #ff0000; color: white; padding: 0.3rem 0.7rem; border-radius: 6px; text-decoration: none; font-size: 0.8rem; font-weight: 500; margin-top: 0.5rem; }
+  .video-link:hover { opacity: 0.9; }
+  
+  .stretch-list { list-style: none; }
+  .stretch-list li { padding: 0.5rem 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+  .stretch-list li:last-child { border-bottom: none; }
+  .stretch-reps { color: var(--green); font-weight: 600; }
+  
+  .aerobic-card { background: linear-gradient(135deg, #f0f7f4, #e8f5e9); border-radius: 12px; padding: 1.2rem; margin: 0.8rem 0; }
+  .aerobic-card h4 { color: var(--green); margin-bottom: 0.3rem; }
+  .aerobic-card .detail { font-size: 0.95rem; }
+  
+  .tip { background: #fff3cd; border-radius: 8px; padding: 0.8rem; margin: 0.8rem 0; font-size: 0.9rem; }
+  .tip::before { content: '💡 '; }
+  
+  .test-card { background: linear-gradient(135deg, #e8eaf6, #c5cae9); border-radius: 12px; padding: 1.2rem; margin: 0.8rem 0; }
+  .test-card h4 { margin-bottom: 0.5rem; }
+  .test-card ol { margin-left: 1.2rem; }
+  .test-card table { width: 100%; margin-top: 0.5rem; font-size: 0.85rem; }
+  .test-card td, .test-card th { padding: 0.2rem 0.4rem; text-align: left; }
+
+  .bonus { border-left-color: var(--accent); }
+  .bonus h4::before { content: '⭐ '; }
+
+  @media (max-width: 500px) { 
+    section { padding: 0.8rem; }
+    header { padding: 1.5rem 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>⛰️ Grand Canyon Training</h1>
+  <p>6-Week Program · May 16 Departure</p>
+  <div class="week-badge" id="current-week">Loading...</div>
+</header>
+
+<nav>
+  <a href="#stretching">Stretching</a>
+  <a href="#strength-a">Strength A</a>
+  <a href="#strength-b">Strength B</a>
+  <a href="#aerobic-a">Aerobic A</a>
+  <a href="#aerobic-b">Aerobic B</a>
+  <a href="#aerobic-c">Aerobic C</a>
+  <a href="#bonus">Bonus</a>
+  <a href="#step-test">Step Test</a>
+</nav>
+
+<!-- STRETCHING -->
+<section id="stretching">
+  <h2>🧘 Stretching Routine</h2>
+  <p style="color:var(--muted);margin-bottom:0.5rem;">Do this before EVERY session.</p>
+  
+  <div class="exercise-card">
+    <h4>1. Cat-Cow</h4>
+    <div class="sets">10 reps</div>
+    <ul class="cues">
+      <li>Start on hands and knees, wrists under shoulders, knees under hips</li>
+      <li><strong>Cow:</strong> Drop belly, lift chest and tailbone, look up</li>
+      <li><strong>Cat:</strong> Round spine up, tuck chin and tailbone</li>
+      <li>Move slowly with your breath — inhale cow, exhale cat</li>
+    </ul>
+    <a class="video-link" href="https://www.youtube.com/results?search_query=cat+cow+stretch+exercise+demo" target="_blank">▶ Watch Demo</a>
+  </div>
+
+  <div class="exercise-card">
+    <h4>2. Thoracic Spine Mobilization</h4>
+    <div class="sets">6 reps per side</div>
+    <ul class="cues">
+      <li>Lie on your side, knees stacked and bent 90°</li>
+      <li>Top arm reaches forward, then rotate open — sweep arm over to opposite side</li>
+      <li>Follow your hand with your eyes, keep knees together</li>
+      <li>Feel the stretch through your mid-back and chest</li>
+    </ul>
+    <a class="video-link" href="https://www.youtube.com/results?search_query=thoracic+spine+rotation+mobilization+exercise" target="_blank">▶ Watch Demo</a>
+  </div>
+
+  <div class="exercise-card">
+    <h4>3. 90-90 Hip Stretch</h4>
+    <div class="sets">6 reps per side</div>
+    <ul class="cues">
+      <li>Sit on floor with front leg bent 90° in front, back leg bent 90° behind</li>
+      <li>Keep both knees at 90° angles</li>
+      <li>Sit tall, lean torso forward over front shin</li>
+      <li>Rotate to switch sides — both legs transition together</li>
+    </ul>
+    <a class="video-link" href="https://www.youtube.com/results?search_query=90-90+hip+stretch+exercise+demo" target="_blank">▶ Watch Demo</a>
+  </div>
+
+  <div class="exercise-card">
+    <h4>4. Kneeling Hip Flexor Stretch</h4>
+    <div class="sets">6 reps per side</div>
+    <ul class="cues">
+      <li>Half-kneel position — front foot flat, back knee on ground</li>
+      <li>Squeeze back glute, shift hips forward gently</li>
+      <li>Keep torso tall — don't arch your lower back</li>
+      <li>Feel stretch in the front of the back hip/thigh</li>
+    </ul>
+    <a class="video-link" href="https://www.youtube.com/results?search_query=kneeling+hip+flexor+stretch+proper+form" target="_blank">▶ Watch Demo</a>
+  </div>
+
+  <div class="exercise-card">
+    <h4>5. Iron Cross Stretch</h4>
+    <div class="sets">6 reps per side</div>
+    <ul class="cues">
+      <li>Lie on back, arms out to sides in a T</li>
+      <li>Lift one leg straight up, then cross it over to opposite hand</li>
+      <li>Keep both shoulders pinned to the ground</li>
+      <li>Feel stretch in hamstrings, glutes, and lower back</li>
+    </ul>
+    <a class="video-link" href="https://www.youtube.com/results?search_query=iron+cross+stretch+lying+exercise+demo" target="_blank">▶ Watch Demo</a>
+  </div>
+
+  <div class="exercise-card">
+    <h4>6. Adductor Stretch</h4>
+    <div class="sets">6 reps per side</div>
+    <ul class="cues">
+      <li>Wide stance, shift weight to one side</li>
+      <li>Bend one knee, keep opposite leg straight</li>
+      <li>Feel stretch along inner thigh of the straight leg</li>
+      <li>Keep chest up, hips back</li>
+    </ul>
+    <a class="video-link" href="https://www.youtube.com/results?search_query=lateral+adductor+stretch+exercise+demo" target="_blank">▶ Watch Demo</a>
+  </div>
+
+  <div class="exercise-card">
+    <h4>7. Toe Touches</h4>
+    <div class="sets">10 reps</div>
+    <ul class="cues">
+      <li>Stand with feet together</li>
+      <li>Slowly hinge forward, reaching toward toes</li>
+      <li>Slight bend in knees is OK</li>
+      <li>Roll back up one vertebra at a time</li>
+    </ul>
+    <a class="video-link" href="https://www.youtube.com/results?search_query=standing+toe+touch+stretch+hamstring" target="_blank">▶ Watch Demo</a>
+  </div>
+
+  <div class="exercise-card">
+    <h4>8. Calf Stretch</h4>
+    <div class="sets">5 reps per side</div>
+    <ul class="cues">
+      <li>Face a wall, step one foot back</li>
+      <li>Keep back heel on floor, lean into wall</li>
+      <li>Feel stretch in back calf</li>
+      <li>Hold 15-20 seconds per rep</li>
+    </ul>
+    <a class="video-link" href="https://www.youtube.com/results?search_query=wall+calf+stretch+exercise+form" target="_blank">▶ Watch Demo</a>
+  </div>
+</section>
+
+<!-- STRENGTH A -->
+<section id="strength-a">
+  <h2>🏋️ Strength A</h2>
+  <div class="progression">
+    <span>Wk 1-2:</span> Empty pack &nbsp;|&nbsp; <span>Wk 3-4:</span> ~10 lbs &nbsp;|&nbsp; <span>Wk 5-6:</span> ~20 lbs
+  </div>
+
+  <div class="exercise-card">
+    <h4>1. Front Step-ups</h4>
+    <div class="sets">3 sets × 10 reps per leg</div>
+    <ul class="cues">
+      <li>Face a 12-16" step or bench, wearing your pack</li>
+      <li>Step up with one foot, drive through the heel to stand tall</li>
+      <li>Bring trailing leg up (don't push off back foot)</li>
+      <li>Step down controlled — same leg leads all 10 reps, then switch</li>
+    </ul>
+    <a class="video-link" href="https://www.youtube.com/results?search_query=weighted+step+ups+exercise+proper+form" target="_blank">▶ Watch Demo</a>
+  </div>
+
+  <div class="exercise-card">
+    <h4>2. Lateral Lunge</h4>
+    <div class="sets">3 sets × 10 reps per leg</div>
+    <ul class="cues">
+      <li>Stand with pack on, feet together</li>
+      <li>Take a wide step to the side, sit hips back and down</li>
+      <li>Keep stepping-side knee tracking over toes, opposite leg straight</li>
+      <li>Push off to return to standing — all reps one side, then switch</li>
+    </ul>
+    <a class="video-link" href="https://www.youtube.com/results?search_query=lateral+lunge+exercise+form+demonstration" target="_blank">▶ Watch Demo</a>
+  </div>
+
+  <div class="exercise-card">
+    <h4>3. Lateral Step-Down Touch</h4>
+    <div class="sets">2 sets × 15 reps per leg</div>
+    <div class="tip">Key eccentric exercise for downhill hiking! This trains your quads to control descent.</div>
+    <ul class="cues">
+      <li>Stand on a step/bench sideways, one foot on the edge</li>
+      <li>Slowly lower the free foot toward the ground — <strong>3 sec descent</strong></li>
+      <li>Lightly tap heel to floor, then drive back up</li>
+      <li>Keep hips level — don't let the standing hip drop</li>
+    </ul>
+    <a class="video-link" href="https://www.youtube.com/results?search_query=lateral+step+down+touch+exercise+eccentric" target="_blank">▶ Watch Demo</a>
+  </div>
+
+  <div class="exercise-card">
+    <h4>4. Unilateral Farmer's Carry</h4>
+    <div class="sets">2 sets per side</div>
+    <div class="progression">
+      <span>Wk 1-2:</span> 30 sec/side &nbsp;|&nbsp; <span>Wk 3-4:</span> 60 sec/side &nbsp;|&nbsp; <span>Wk 5-6:</span> 90 sec/side
+    </div>
+    <ul class="cues">
+      <li>Hold 20-30 lb weight in ONE hand (dumbbell, kettlebell, or jug)</li>
+      <li>Walk with tall posture — fight the lean!</li>
+      <li>Keep shoulders level, core braced</li>
+      <li>Switch hands after the timed carry</li>
+    </ul>
+    <a class="video-link" href="https://www.youtube.com/results?search_query=single+arm+farmer+carry+suitcase+carry+exercise" target="_blank">▶ Watch Demo</a>
+  </div>
+
+  <div class="exercise-card">
+    <h4>5. Single-Leg Calf Raises</h4>
+    <div class="sets">2 sets × 15 reps per leg</div>
+    <ul class="cues">
+      <li>Stand on one foot on a step edge (heel hanging off)</li>
+      <li>Rise up on toes as high as possible</li>
+      <li>Lower slowly below the step level for full range</li>
+      <li>Hold a wall for balance if needed — pack adds load</li>
+    </ul>
+    <a class="video-link" href="https://www.youtube.com/results?search_query=single+leg+calf+raise+on+step+exercise" target="_blank">▶ Watch Demo</a>
+  </div>
+
+  <div class="exercise-card">
+    <h4>6. Supine Bridge Walk-out</h4>
+    <div class="sets">2 sets × timed hold</div>
+    <div class="progression">
+      <span>Wk 1-2:</span> 30 sec &nbsp;|&nbsp; <span>Wk 3-4:</span> 45 sec &nbsp;|&nbsp; <span>Wk 5-6:</span> 60 sec
+    </div>
+    <ul class="cues">
+      <li>Lie on back, knees bent, feet flat on floor</li>
+      <li>Bridge up — hips high, squeeze glutes</li>
+      <li>Slowly walk feet OUT away from your body</li>
+      <li>Walk them back in — maintain the bridge the entire time</li>
+    </ul>
+    <a class="video-link" href="https://www.youtube.com/results?search_query=supine+bridge+walkout+glute+bridge+exercise" target="_blank">▶ Watch Demo</a>
+  </div>
+
+  <div class="exercise-card">
+    <h4>7. Front Plank</h4>
+    <div class="sets">3 sets × timed hold</div>
+    <div class="progression">
+      <span>Wk 1-2:</span> 30 sec &nbsp;|&nbsp; <span>Wk 3-4:</span> 45 sec &nbsp;|&nbsp; <span>Wk 5-6:</span> 60 sec
+    </div>
+    <ul class="cues">
+      <li>Forearms and toes on ground, body straight as a board</li>
+      <li>Elbows under shoulders, squeeze glutes and abs</li>
+      <li>Don't let hips sag or pike up</li>
+      <li>Breathe normally — don't hold your breath!</li>
+    </ul>
+    <a class="video-link" href="https://www.youtube.com/results?search_query=front+plank+proper+form+exercise" target="_blank">▶ Watch Demo</a>
+  </div>
+
+  <div class="exercise-card">
+    <h4>8. Prone Cobra</h4>
+    <div class="sets">3 sets × timed hold</div>
+    <div class="progression">
+      <span>Wk 1-2:</span> 30 sec &nbsp;|&nbsp; <span>Wk 3-4:</span> 45 sec &nbsp;|&nbsp; <span>Wk 5-6:</span> 60 sec
+    </div>
+    <ul class="cues">
+      <li>Lie face down, arms at your sides</li>
+      <li>Lift chest and arms off the floor — squeeze shoulder blades together</li>
+      <li>Palms face down, thumbs rotate out</li>
+      <li>Keep feet on ground, hold position</li>
+    </ul>
+    <a class="video-link" href="https://www.youtube.com/results?search_query=prone+cobra+exercise+back+extension+hold" target="_blank">▶ Watch Demo</a>
+  </div>
+</section>
+
+<!-- STRENGTH B -->
+<section id="strength-b">
+  <h2>🏋️ Strength B</h2>
+  <div class="progression">
+    <span>Wk 1-2:</span> Empty pack &nbsp;|&nbsp; <span>Wk 3-4:</span> ~10 lbs &nbsp;|&nbsp; <span>Wk 5-6:</span> ~20 lbs
+  </div>
+
+  <div class="exercise-card">
+    <h4>1. Lateral Step-ups</h4>
+    <div class="sets">3 sets × 10 reps per leg</div>
+    <ul class="cues">
+      <li>Stand beside a 12-16" step, pack on</li>
+      <li>Step up sideways — near foot goes on the step</li>
+      <li>Drive through heel, stand tall on top</li>
+      <li>Step down controlled, same leg leads all reps</li>
+    </ul>
+    <a class="video-link" href="https://www.youtube.com/results?search_query=lateral+step+up+exercise+demonstration" target="_blank">▶ Watch Demo</a>
+  </div>
+
+  <div class="exercise-card">
+    <h4>2. Walking Lunge</h4>
+    <div class="sets">3 sets × 10 reps per leg</div>
+    <ul class="cues">
+      <li>Wearing pack, step forward into a deep lunge</li>
+      <li>Both knees at ~90°, back knee just above floor</li>
+      <li>Drive through front heel to step forward into next lunge</li>
+      <li>Keep torso upright throughout</li>
+    </ul>
+    <a class="video-link" href="https://www.youtube.com/results?search_query=walking+lunge+exercise+proper+form+weighted" target="_blank">▶ Watch Demo</a>
+  </div>
+
+  <div class="exercise-card">
+    <h4>3. Front Step-Down Touch</h4>
+    <div class="sets">2 sets × 15 reps per leg</div>
+    <div class="tip">Another key eccentric exercise! Simulates the controlled descent you'll do on South Kaibab.</div>
+    <ul class="cues">
+      <li>Stand on step/bench facing forward, one foot on the edge</li>
+      <li>Slowly lower the free foot FORWARD and DOWN — <strong>3 sec descent</strong></li>
+      <li>Lightly tap heel to ground, then return to standing</li>
+      <li>Control the movement — this is about the slow lowering</li>
+    </ul>
+    <a class="video-link" href="https://www.youtube.com/results?search_query=forward+step+down+exercise+eccentric+quad" target="_blank">▶ Watch Demo</a>
+  </div>
+
+  <div class="exercise-card">
+    <h4>4. Unilateral Farmer's Carry</h4>
+    <div class="sets">2 sets per side</div>
+    <div class="progression">
+      <span>Wk 1-2:</span> 30 sec/side &nbsp;|&nbsp; <span>Wk 3-4:</span> 60 sec/side &nbsp;|&nbsp; <span>Wk 5-6:</span> 90 sec/side
+    </div>
+    <ul class="cues">
+      <li>Same as Strength A — one-arm carry, 20-30 lbs</li>
+      <li>Walk tall, fight the lean, keep shoulders level</li>
+    </ul>
+    <a class="video-link" href="https://www.youtube.com/results?search_query=single+arm+farmer+carry+suitcase+carry+exercise" target="_blank">▶ Watch Demo</a>
+  </div>
+
+  <div class="exercise-card">
+    <h4>5. Single-Leg Calf Raises</h4>
+    <div class="sets">2 sets × 15 reps per leg</div>
+    <ul class="cues">
+      <li>Same as Strength A — on step edge, full range</li>
+    </ul>
+    <a class="video-link" href="https://www.youtube.com/results?search_query=single+leg+calf+raise+on+step+exercise" target="_blank">▶ Watch Demo</a>
+  </div>
+
+  <div class="exercise-card">
+    <h4>6. Supine Bridge Walk-outs</h4>
+    <div class="sets">2 sets × timed hold</div>
+    <div class="progression">
+      <span>Wk 1-2:</span> 30 sec &nbsp;|&nbsp; <span>Wk 3-4:</span> 45 sec &nbsp;|&nbsp; <span>Wk 5-6:</span> 60 sec
+    </div>
+    <ul class="cues">
+      <li>Same as Strength A — bridge up, walk feet out and in</li>
+    </ul>
+    <a class="video-link" href="https://www.youtube.com/results?search_query=supine+bridge+walkout+glute+bridge+exercise" target="_blank">▶ Watch Demo</a>
+  </div>
+
+  <div class="exercise-card">
+    <h4>7. Active Straight Leg Raise</h4>
+    <div class="sets">3 sets × timed hold</div>
+    <div class="progression">
+      <span>Wk 1-2:</span> 30 sec &nbsp;|&nbsp; <span>Wk 3-4:</span> 45 sec &nbsp;|&nbsp; <span>Wk 5-6:</span> 60 sec
+    </div>
+    <ul class="cues">
+      <li>Lie on back, legs straight</li>
+      <li>Raise both legs to ~45° off the floor</li>
+      <li>Keep lower back pressed into the ground</li>
+      <li>Hold — feel it in your lower abs</li>
+    </ul>
+    <a class="video-link" href="https://www.youtube.com/results?search_query=active+straight+leg+raise+core+exercise" target="_blank">▶ Watch Demo</a>
+  </div>
+
+  <div class="exercise-card">
+    <h4>8. Side Planks</h4>
+    <div class="sets">2 sets per side × timed hold</div>
+    <div class="progression">
+      <span>Wk 1-2:</span> 30 sec/side &nbsp;|&nbsp; <span>Wk 3-4:</span> 45 sec/side &nbsp;|&nbsp; <span>Wk 5-6:</span> 60 sec/side
+    </div>
+    <ul class="cues">
+      <li>Lie on side, forearm on ground, elbow under shoulder</li>
+      <li>Lift hips — body forms a straight line</li>
+      <li>Stack feet or stagger them for easier balance</li>
+      <li>Keep hips from sagging — squeeze obliques</li>
+    </ul>
+    <a class="video-link" href="https://www.youtube.com/results?search_query=side+plank+proper+form+exercise" target="_blank">▶ Watch Demo</a>
+  </div>
+</section>
+
+<!-- AEROBIC A -->
+<section id="aerobic-a">
+  <h2>🚶 Aerobic A — Brisk Walk</h2>
+  <div class="aerobic-card">
+    <h4>Steady-State Endurance Walk</h4>
+    <div class="progression">
+      <span>Wk 1-2:</span> 30 min &nbsp;|&nbsp; <span>Wk 3-4:</span> 45 min &nbsp;|&nbsp; <span>Wk 5-6:</span> 60 min
+    </div>
+    <div class="detail" style="margin-top:0.5rem;">
+      <ul>
+        <li>Wear your backpack + hiking shoes</li>
+        <li>Maintain consistent movement — no stopping</li>
+        <li>Pace: fast enough to elevate HR & breathing, not so fast you must stop</li>
+        <li>Conversational pace — you can talk but it's an effort</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- AEROBIC B -->
+<section id="aerobic-b">
+  <h2>🪜 Aerobic B — Stair Intervals</h2>
+  <div class="aerobic-card">
+    <h4>10 × 60-Second Stair Intervals</h4>
+    <div class="progression">
+      <span>Wk 1-2:</span> Empty pack &nbsp;|&nbsp; <span>Wk 3-4:</span> ~10 lbs &nbsp;|&nbsp; <span>Wk 5-6:</span> ~20 lbs
+    </div>
+    <div class="detail" style="margin-top:0.5rem;">
+      <ul>
+        <li>Find stairs covering 2-3 floors</li>
+        <li>Wear backpack + hiking shoes</li>
+        <li>Go up and down at a rapid, consistent pace for 60 seconds</li>
+        <li>Rest 2 minutes</li>
+        <li>Repeat × 10 rounds</li>
+      </ul>
+    </div>
+  </div>
+  <div class="tip">CARRY your pack in your arms instead of wearing it — builds upper body strength for loading/unloading gear at camp!</div>
+</section>
+
+<!-- AEROBIC C -->
+<section id="aerobic-c">
+  <h2>🥾 Aerobic C — Distance Hike</h2>
+  <div class="aerobic-card">
+    <h4>Young Man Trail, South Mountain</h4>
+    <div class="progression">
+      <span>Wk 1-2:</span> 4 miles &nbsp;|&nbsp; <span>Wk 3-4:</span> 6 miles &nbsp;|&nbsp; <span>Wk 5-6:</span> 8 miles
+    </div>
+    <div class="detail" style="margin-top:0.5rem;">
+      <ul>
+        <li>Wear backpack + hiking shoes, pack at trip weight</li>
+        <li>Emphasis on DISTANCE — speed doesn't matter</li>
+        <li>Stops are OK — just complete the full mileage</li>
+        <li>Trail = 2 mi / 894 ft gain per loop</li>
+        <li>Wk 1-2: 2 loops | Wk 3-4: 3 loops | Wk 5-6: 4 loops</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- BONUS EXERCISES -->
+<section id="bonus">
+  <h2>⭐ Bonus Exercises</h2>
+  <p style="color:var(--muted);margin-bottom:0.5rem;">Add these to Strength A and B for extra preparation. These target the exact demands of canyon hiking.</p>
+
+  <div class="exercise-card bonus">
+    <h4>Bodyweight Pistol Squat Progressions</h4>
+    <div class="sets">3 sets × 5-8 reps per leg</div>
+    <p style="font-size:0.9rem;color:var(--muted);margin:0.3rem 0;">Add to Strength A days</p>
+    <ul class="cues">
+      <li><strong>Start with:</strong> Single-leg sit-to-stand from a chair or bench</li>
+      <li>Sit down on one leg, other leg extended forward</li>
+      <li>Stand back up without using hands</li>
+      <li><strong>Progress to:</strong> Lower bench/box → eventually no bench (full pistol)</li>
+      <li>This is the ultimate downhill hiking exercise — pure eccentric single-leg control</li>
+    </ul>
+    <a class="video-link" href="https://www.youtube.com/results?search_query=pistol+squat+progression+beginner+to+advanced" target="_blank">▶ Watch Demo</a>
+  </div>
+
+  <div class="exercise-card bonus">
+    <h4>Bulgarian Split Squat</h4>
+    <div class="sets">3 sets × 8-10 reps per leg</div>
+    <p style="font-size:0.9rem;color:var(--muted);margin:0.3rem 0;">Add to Strength B days</p>
+    <ul class="cues">
+      <li>Rear foot elevated on a bench or step behind you</li>
+      <li>Lower into a deep lunge — front knee tracks over toes</li>
+      <li>Drive through front heel to stand back up</li>
+      <li>Wear your pack for added load</li>
+      <li>Builds massive single-leg strength for trail switchbacks</li>
+    </ul>
+    <a class="video-link" href="https://www.youtube.com/results?search_query=bulgarian+split+squat+proper+form+exercise" target="_blank">▶ Watch Demo</a>
+  </div>
+
+  <div class="exercise-card bonus">
+    <h4>Romanian Deadlift (RDL)</h4>
+    <div class="sets">3 sets × 10-12 reps</div>
+    <p style="font-size:0.9rem;color:var(--muted);margin:0.3rem 0;">Add to Strength A or B days</p>
+    <ul class="cues">
+      <li>Hold dumbbells or kettlebell in front of thighs</li>
+      <li>Slight knee bend, hinge at hips — push butt BACK</li>
+      <li>Lower weights along your legs until you feel hamstring stretch</li>
+      <li>Squeeze glutes to stand back up — don't round your back!</li>
+      <li>Builds posterior chain for uphill climbs (Bright Angel out)</li>
+    </ul>
+    <a class="video-link" href="https://www.youtube.com/results?search_query=romanian+deadlift+dumbbell+proper+form" target="_blank">▶ Watch Demo</a>
+  </div>
+
+  <div class="exercise-card bonus">
+    <h4>Single-Leg Romanian Deadlift</h4>
+    <div class="sets">2 sets × 8 reps per leg</div>
+    <p style="font-size:0.9rem;color:var(--muted);margin:0.3rem 0;">Add to Strength B days (after RDL is comfortable)</p>
+    <ul class="cues">
+      <li>Stand on one leg, slight knee bend</li>
+      <li>Hinge forward, extending free leg behind you</li>
+      <li>Lower until torso is near parallel to floor</li>
+      <li>Squeeze glute to return — hold a dumbbell for load</li>
+      <li>Builds balance + single-leg strength for uneven terrain</li>
+    </ul>
+    <a class="video-link" href="https://www.youtube.com/results?search_query=single+leg+romanian+deadlift+exercise+balance" target="_blank">▶ Watch Demo</a>
+  </div>
+</section>
+
+<!-- STEP TEST -->
+<section id="step-test">
+  <h2>📋 YMCA Step Test</h2>
+  <div class="test-card">
+    <h4>Test Dates: Mar 31 · Apr 20 · May 11</h4>
+    <p><strong>Equipment:</strong> 12-inch step, stopwatch, metronome at 96 BPM</p>
+    <ol style="margin-top:0.5rem;">
+      <li>Set metronome to 96 BPM</li>
+      <li>Step up/down following the beat: <strong>up, up, down, down</strong></li>
+      <li>Continue for exactly 3 minutes</li>
+      <li>Immediately sit down</li>
+      <li>Find pulse (wrist or neck)</li>
+      <li>Count beats for 60 seconds</li>
+    </ol>
+    <h4 style="margin-top:1rem;">Your Results (Male, 36-45)</h4>
+    <table>
+      <tr><td>🏆 Excellent</td><td><strong>&lt; 76 bpm</strong></td></tr>
+      <tr><td>✅ Good</td><td><strong>80-88 bpm</strong></td></tr>
+      <tr><td>👍 Above Average</td><td><strong>92-98 bpm</strong></td></tr>
+      <tr><td>➡️ Average</td><td><strong>100-105 bpm</strong></td></tr>
+      <tr><td>⚠️ Below Average</td><td><strong>108-113 bpm</strong></td></tr>
+    </table>
+    <p style="margin-top:0.5rem;font-size:0.9rem;">Target: <strong>Above Average or higher</strong> after completing the program.</p>
+  </div>
+  <a class="video-link" href="https://www.youtube.com/results?search_query=YMCA+3+minute+step+test+demonstration" target="_blank">▶ Watch Step Test Demo</a>
+</section>
+
+<script>
+// Calculate current week
+const start = new Date('2026-03-31');
+const now = new Date();
+const diffDays = Math.floor((now - start) / (1000 * 60 * 60 * 24));
+const week = Math.min(6, Math.max(1, Math.ceil((diffDays + 1) / 7)));
+const day = ((diffDays % 7) + 1);
+const badge = document.getElementById('current-week');
+if (diffDays < 0) badge.textContent = 'Starts Mar 31';
+else if (diffDays > 42) badge.textContent = 'Week ' + week + ' — Taper / Hike Time!';
+else if (diffDays > 46) badge.textContent = '⛰️ Hike Time!';
+else badge.textContent = 'Week ' + week + ', Day ' + day;
+</script>
+
+</body>
+</html>
