@@ -5,377 +5,357 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Grand Canyon Training</title>
 <style>
-  :root { --green: #2d6a4f; --bg: #fafaf8; --card: #fff; --text: #1a1a1a; --muted: #666; --accent: #d4a373; --red: #c0392b; }
+  :root { --green: #2d6a4f; --bg: #fafaf8; --card: #fff; --text: #1a1a1a; --muted: #666; --accent: #d4a373; }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding-bottom: 4rem; }
   
-  header { background: linear-gradient(135deg, var(--green), #1b4332); color: white; padding: 2rem 1.5rem; text-align: center; }
-  header h1 { font-size: 1.5rem; margin-bottom: 0.2rem; }
-  header .sub { opacity: 0.85; font-size: 0.95rem; }
-  .badge { display: inline-block; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600; margin: 0.5rem 0.2rem; }
-  .badge-week { background: var(--accent); color: white; }
-  .badge-load { background: rgba(255,255,255,0.2); color: white; }
+  header { background: linear-gradient(135deg, var(--green), #1b4332); color: white; padding: 1.2rem 1rem 0.6rem; text-align: center; }
+  header h1 { font-size: 1.4rem; margin-bottom: 0.1rem; }
+  header .sub { opacity: 0.8; font-size: 0.85rem; }
+
+  /* Date Picker Strip */
+  .date-strip { background: linear-gradient(135deg, #1b4332, #0d2818); padding: 0.6rem 0 0.8rem; overflow: hidden; }
+  .date-strip-inner { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; padding: 0 1rem; gap: 0.4rem; scrollbar-width: none; }
+  .date-strip-inner::-webkit-scrollbar { display: none; }
   
-  .day-nav { display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 1rem; background: white; border-bottom: 1px solid #e0e0e0; position: sticky; top: 0; z-index: 10; }
-  .day-nav a { color: var(--green); text-decoration: none; font-weight: 600; font-size: 0.95rem; padding: 0.4rem 0.8rem; border-radius: 8px; }
-  .day-nav a:hover { background: #f0f7f4; }
-  .day-nav .today-label { font-size: 0.85rem; color: var(--muted); }
+  .date-chip { flex-shrink: 0; scroll-snap-align: center; width: 52px; padding: 0.4rem 0.2rem; border-radius: 12px; text-align: center; cursor: pointer; transition: all 0.2s; text-decoration: none; color: rgba(255,255,255,0.6); border: 1.5px solid transparent; }
+  .date-chip:hover { background: rgba(255,255,255,0.1); }
+  .date-chip.active { background: white; color: var(--green); border-color: white; }
+  .date-chip.today:not(.active) { border-color: var(--accent); color: white; }
+  .date-chip .day-name { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.5px; }
+  .date-chip .day-num { font-size: 1.1rem; font-weight: 700; line-height: 1.2; }
+  .date-chip .month { font-size: 0.6rem; opacity: 0.8; }
+  .date-chip .workout-dot { width: 6px; height: 6px; border-radius: 50%; margin: 2px auto 0; }
+  .dot-strength { background: #4caf50; }
+  .dot-aerobic { background: #2196f3; }
+  .dot-rest { background: rgba(255,255,255,0.3); }
+  .dot-test { background: #ff9800; }
+  .dot-taper { background: #9c27b0; }
+  .dot-hike { background: #f44336; }
+
+  .week-separator { flex-shrink: 0; width: 1px; background: rgba(255,255,255,0.15); margin: 0.3rem 0.2rem; align-self: stretch; }
+
+  /* Info bar */
+  .info-bar { display: flex; justify-content: center; gap: 0.5rem; padding: 0.5rem 1rem; background: white; border-bottom: 1px solid #e8e8e8; flex-wrap: wrap; }
+  .info-badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.78rem; font-weight: 600; }
+  .info-week { background: var(--accent); color: white; }
+  .info-load { background: #e8f5e9; color: var(--green); }
+  .info-type { background: #e3f2fd; color: #1565c0; }
+
+  .progress-bar { height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px; margin: 0.5rem 1rem 0; overflow: hidden; }
+  .progress-bar .fill { height: 100%; background: var(--accent); border-radius: 2px; }
 
   section { padding: 0.8rem 1rem; max-width: 700px; margin: 0 auto; }
-  h2 { color: var(--green); font-size: 1.2rem; margin: 1.2rem 0 0.5rem; padding-bottom: 0.3rem; border-bottom: 2px solid var(--green); }
-  h3 { font-size: 1rem; margin: 0.8rem 0 0.3rem; }
+  h2 { color: var(--green); font-size: 1.15rem; margin: 1.2rem 0 0.4rem; padding-bottom: 0.3rem; border-bottom: 2px solid var(--green); }
   
-  .exercise { background: var(--card); border-radius: 12px; padding: 1rem; margin: 0.6rem 0; box-shadow: 0 1px 4px rgba(0,0,0,0.08); border-left: 4px solid var(--green); }
-  .exercise h4 { font-size: 0.95rem; margin-bottom: 0.2rem; }
-  .exercise .sets { color: var(--green); font-weight: 600; font-size: 0.9rem; }
-  .exercise .cues { font-size: 0.88rem; color: var(--muted); margin-top: 0.3rem; }
-  .exercise .cues li { margin: 0.15rem 0 0.15rem 1.2rem; }
-  .video-link { display: inline-flex; align-items: center; gap: 0.3rem; background: #ff0000; color: white; padding: 0.25rem 0.6rem; border-radius: 6px; text-decoration: none; font-size: 0.78rem; font-weight: 500; margin-top: 0.4rem; }
+  .exercise { background: var(--card); border-radius: 12px; padding: 0.9rem; margin: 0.5rem 0; box-shadow: 0 1px 4px rgba(0,0,0,0.08); border-left: 4px solid var(--green); }
+  .exercise h4 { font-size: 0.95rem; margin-bottom: 0.15rem; }
+  .exercise .sets { color: var(--green); font-weight: 600; font-size: 0.88rem; }
+  .exercise .cues { font-size: 0.85rem; color: var(--muted); margin-top: 0.25rem; }
+  .exercise .cues li { margin: 0.1rem 0 0.1rem 1.2rem; }
+  .video-link { display: inline-flex; align-items: center; gap: 0.3rem; background: #ff0000; color: white; padding: 0.2rem 0.55rem; border-radius: 6px; text-decoration: none; font-size: 0.75rem; font-weight: 500; margin-top: 0.35rem; }
   
-  .tip { background: #fff3cd; border-radius: 8px; padding: 0.7rem; margin: 0.6rem 0; font-size: 0.88rem; }
+  .tip { background: #fff3cd; border-radius: 8px; padding: 0.6rem; margin: 0.5rem 0; font-size: 0.85rem; }
   .tip::before { content: '💡 '; }
   
-  .rest-card { background: linear-gradient(135deg, #e8f5e9, #c8e6c9); border-radius: 16px; padding: 2rem; text-align: center; margin: 2rem 0; }
-  .rest-card h2 { border: none; color: var(--green); font-size: 1.4rem; }
+  .rest-card { background: linear-gradient(135deg, #e8f5e9, #c8e6c9); border-radius: 16px; padding: 2rem; text-align: center; margin: 1.5rem 0; }
+  .rest-card h2 { border: none; color: var(--green); font-size: 1.3rem; margin: 0; }
   .rest-card p { color: var(--muted); margin-top: 0.5rem; }
+  .test-card { background: linear-gradient(135deg, #e8eaf6, #c5cae9); border-radius: 12px; padding: 1rem; margin: 0.8rem 0; }
+  .test-card h3 { margin: 0 0 0.4rem; font-size: 1rem; }
+  .test-card ol { margin-left: 1.2rem; font-size: 0.88rem; }
+  .test-card table { width: 100%; margin-top: 0.4rem; font-size: 0.82rem; }
+  .test-card td { padding: 0.15rem 0.3rem; }
+  .taper-card { background: linear-gradient(135deg, #e0f2f1, #b2dfdb); border-radius: 16px; padding: 2rem; text-align: center; margin: 1.5rem 0; }
+  .hike-card { background: linear-gradient(135deg, #fff3e0, #ffe0b2); border-radius: 16px; padding: 2rem; text-align: center; margin: 1.5rem 0; }
 
-  .test-card { background: linear-gradient(135deg, #e8eaf6, #c5cae9); border-radius: 12px; padding: 1.2rem; margin: 1rem 0; }
-  .test-card h3 { margin-top: 0; }
-  .test-card ol { margin-left: 1.2rem; font-size: 0.92rem; }
-  .test-card table { width: 100%; margin-top: 0.5rem; font-size: 0.85rem; }
-  .test-card td { padding: 0.2rem 0.4rem; }
+  .today-btn { display: block; margin: 0.8rem auto; background: var(--green); color: white; border: none; padding: 0.6rem 1.5rem; border-radius: 10px; font-size: 0.9rem; font-weight: 600; cursor: pointer; }
 
-  .taper-card { background: linear-gradient(135deg, #e0f2f1, #b2dfdb); border-radius: 16px; padding: 2rem; text-align: center; margin: 2rem 0; }
-  .hike-card { background: linear-gradient(135deg, #fff3e0, #ffe0b2); border-radius: 16px; padding: 2rem; text-align: center; margin: 2rem 0; }
-  
-  .overview-link { display: block; text-align: center; margin: 1.5rem 0; }
-  .overview-link a { color: var(--green); font-weight: 600; text-decoration: none; padding: 0.6rem 1.2rem; border: 2px solid var(--green); border-radius: 10px; }
-
-  .progress-bar { height: 6px; background: #e0e0e0; border-radius: 3px; margin: 0.5rem 0; overflow: hidden; }
-  .progress-bar .fill { height: 100%; background: var(--green); border-radius: 3px; transition: width 0.3s; }
-
-  @media (max-width: 500px) { section { padding: 0.6rem; } header { padding: 1.5rem 1rem; } }
+  @media (max-width: 500px) { section { padding: 0.6rem 0.8rem; } }
 </style>
 </head>
 <body>
 <div id="app"></div>
 
 <script>
-const PROGRAM_START = new Date('2026-03-31T00:00:00');
-const PROGRAM_END = new Date('2026-05-16T00:00:00');
+const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun'];
+const FULL_DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 
-const STRETCH = [
-  { name: 'Cat-Cow', reps: '10 reps', cues: ['Hands & knees → drop belly/lift chest (cow) → round spine/tuck chin (cat)', 'Inhale cow, exhale cat. Slow and controlled.'], yt: 'cat+cow+stretch+exercise' },
-  { name: 'Thoracic Spine Mobilization', reps: '6/side', cues: ['Lie on side, knees stacked at 90°. Top arm sweeps open to opposite side.', 'Follow hand with eyes, keep knees together.'], yt: 'thoracic+spine+rotation+mobilization' },
-  { name: '90-90 Hip Stretch', reps: '6/side', cues: ['Sit with front leg 90° in front, back leg 90° behind.', 'Sit tall, lean torso forward over front shin.'], yt: '90-90+hip+stretch+exercise' },
-  { name: 'Kneeling Hip Flexor Stretch', reps: '6/side', cues: ['Half-kneel, squeeze back glute, shift hips forward gently.', 'Stay tall — don\'t arch lower back.'], yt: 'kneeling+hip+flexor+stretch' },
-  { name: 'Iron Cross Stretch', reps: '6/side', cues: ['Lie on back, arms in T. Lift leg straight, cross to opposite hand.', 'Keep both shoulders pinned to ground.'], yt: 'iron+cross+stretch+lying' },
-  { name: 'Adductor Stretch', reps: '6/side', cues: ['Wide stance, shift weight to one side, bend that knee.', 'Keep opposite leg straight. Chest up.'], yt: 'lateral+adductor+stretch' },
-  { name: 'Toe Touches', reps: '10 reps', cues: ['Stand feet together, hinge forward reaching for toes.', 'Slight knee bend OK. Roll up slowly.'], yt: 'standing+toe+touch+stretch' },
-  { name: 'Calf Stretch', reps: '5/side (hold 15-20s)', cues: ['Face wall, step one foot back, lean in.', 'Keep back heel on floor.'], yt: 'wall+calf+stretch' },
-];
-
-const STRENGTH_A = [
-  { name: 'Front Step-ups', sets: '3×10/leg', cues: ['Face 12-16" step wearing pack. Step up driving through heel.', 'Don\'t push off back foot — lead leg does the work.'], yt: 'weighted+step+ups+exercise+form' },
-  { name: 'Lateral Lunge', sets: '3×10/leg', cues: ['Wide step to the side, sit hips back and down.', 'Stepping knee tracks over toes, opposite leg straight.'], yt: 'lateral+lunge+exercise+form' },
-  { name: 'Lateral Step-Down Touch', sets: '2×15/leg', cues: ['Stand on step sideways. Slowly lower free foot — 3 SEC DESCENT.', 'Tap heel to floor, drive back up. Keep hips level!'], yt: 'lateral+step+down+touch+eccentric', tip: 'Key eccentric exercise for downhill hiking! Trains quads to control descent.' },
-  { name: 'Unilateral Farmer\'s Carry', sets_fn: w => `2×${w<=2?'30':w<=4?'60':'90'} sec/side`, cues: ['Hold 20-30 lb weight in ONE hand. Walk tall.', 'Fight the lean! Keep shoulders level, core braced.'], yt: 'single+arm+farmer+carry+suitcase' },
-  { name: 'Single-Leg Calf Raises', sets: '2×15/leg', cues: ['Stand on one foot on step edge (heel hanging off).', 'Rise high on toes, lower slowly below step level.'], yt: 'single+leg+calf+raise+step' },
-  { name: 'Supine Bridge Walk-out', sets_fn: w => `2×${w<=2?'30':w<=4?'45':'60'} sec`, cues: ['Bridge up, hips high, squeeze glutes.', 'Walk feet OUT away from body, then back in. Maintain bridge.'], yt: 'supine+bridge+walkout+glute' },
-  { name: 'Front Plank', sets_fn: w => `3×${w<=2?'30':w<=4?'45':'60'} sec`, cues: ['Forearms + toes. Body straight as a board.', 'Don\'t let hips sag or pike. Breathe!'], yt: 'front+plank+proper+form' },
-  { name: 'Prone Cobra', sets_fn: w => `3×${w<=2?'30':w<=4?'45':'60'} sec`, cues: ['Lie face down. Lift chest + arms off floor.', 'Squeeze shoulder blades together. Feet stay down.'], yt: 'prone+cobra+exercise+back+extension' },
-];
-
-const STRENGTH_B = [
-  { name: 'Lateral Step-ups', sets: '3×10/leg', cues: ['Stand beside step. Step up sideways, drive through heel.', 'Stand tall on top, step down controlled.'], yt: 'lateral+step+up+exercise' },
-  { name: 'Walking Lunge', sets: '3×10/leg', cues: ['Step forward into deep lunge. Both knees ~90°.', 'Drive through front heel to next lunge. Torso upright.'], yt: 'walking+lunge+weighted+form' },
-  { name: 'Front Step-Down Touch', sets: '2×15/leg', cues: ['Stand on step facing forward. Lower free foot FORWARD — 3 SEC DESCENT.', 'Tap heel, return to standing. Control the lowering.'], yt: 'forward+step+down+eccentric+quad', tip: 'Simulates the controlled descent on South Kaibab.' },
-  { name: 'Unilateral Farmer\'s Carry', sets_fn: w => `2×${w<=2?'30':w<=4?'60':'90'} sec/side`, cues: ['Same as Strength A — one-arm carry, 20-30 lbs.', 'Walk tall, fight the lean.'], yt: 'single+arm+farmer+carry+suitcase' },
-  { name: 'Single-Leg Calf Raises', sets: '2×15/leg', cues: ['On step edge, full range of motion.'], yt: 'single+leg+calf+raise+step' },
-  { name: 'Supine Bridge Walk-outs', sets_fn: w => `2×${w<=2?'30':w<=4?'45':'60'} sec`, cues: ['Bridge up, walk feet out and in.'], yt: 'supine+bridge+walkout+glute' },
-  { name: 'Active Straight Leg Raise', sets_fn: w => `3×${w<=2?'30':w<=4?'45':'60'} sec`, cues: ['Lie on back, raise both legs to ~45°. Hold.', 'Press lower back into ground. Feel it in lower abs.'], yt: 'active+straight+leg+raise+core' },
-  { name: 'Side Planks', sets_fn: w => `2×${w<=2?'30':w<=4?'45':'60'} sec/side`, cues: ['Forearm on ground, elbow under shoulder. Lift hips.', 'Body in straight line. Don\'t let hips sag.'], yt: 'side+plank+proper+form' },
-];
-
-const BONUS = [
-  { name: '⭐ Pistol Squat Progression', sets: '3×5-8/leg', cues: ['Start with single-leg sit-to-stand from a chair.', 'Progress to lower surfaces → eventually no support.', 'Ultimate downhill hiking exercise.'], yt: 'pistol+squat+progression+beginner' },
-  { name: '⭐ Bulgarian Split Squat', sets: '3×8-10/leg', cues: ['Rear foot on bench behind you. Deep lunge down.', 'Drive through front heel. Wear your pack.'], yt: 'bulgarian+split+squat+form' },
-  { name: '⭐ Romanian Deadlift', sets: '3×10-12', cues: ['Hold dumbbells, slight knee bend, hinge at hips.', 'Lower along legs until hamstring stretch. Squeeze glutes up.', 'Don\'t round your back!'], yt: 'romanian+deadlift+dumbbell+form' },
-  { name: '⭐ Single-Leg RDL', sets: '2×8/leg', cues: ['Stand on one leg, hinge forward, free leg extends back.', 'Builds balance + strength for uneven terrain.'], yt: 'single+leg+romanian+deadlift+balance' },
-];
-
-// Schedule data: [date, type, details]
-const SCHEDULE = {};
-function addDay(date, type, extra) { SCHEDULE[date] = { type, ...extra }; }
-
-// Week 1 (no load)
-addDay('2026-03-31', 'strength-a', { week: 1, stepTest: 'baseline' });
-addDay('2026-04-01', 'aerobic-a', { week: 1 });
-addDay('2026-04-02', 'rest', { week: 1 });
-addDay('2026-04-03', 'strength-b', { week: 1 });
-addDay('2026-04-04', 'aerobic-b', { week: 1 });
-addDay('2026-04-05', 'aerobic-c', { week: 1 });
-addDay('2026-04-06', 'rest', { week: 1 });
-// Week 2
-addDay('2026-04-07', 'strength-a', { week: 2 });
-addDay('2026-04-08', 'aerobic-a', { week: 2 });
-addDay('2026-04-09', 'rest', { week: 2 });
-addDay('2026-04-10', 'strength-b', { week: 2 });
-addDay('2026-04-11', 'aerobic-b', { week: 2 });
-addDay('2026-04-12', 'aerobic-c', { week: 2 });
-addDay('2026-04-13', 'rest', { week: 2 });
-// Week 3 (~10 lbs)
-addDay('2026-04-14', 'strength-a', { week: 3 });
-addDay('2026-04-15', 'aerobic-a', { week: 3 });
-addDay('2026-04-16', 'rest', { week: 3 });
-addDay('2026-04-17', 'strength-b', { week: 3 });
-addDay('2026-04-18', 'aerobic-b', { week: 3 });
-addDay('2026-04-19', 'aerobic-c', { week: 3 });
-addDay('2026-04-20', 'rest', { week: 3, stepTest: 'retest' });
-// Week 4
-addDay('2026-04-21', 'strength-a', { week: 4 });
-addDay('2026-04-22', 'aerobic-a', { week: 4 });
-addDay('2026-04-23', 'rest', { week: 4 });
-addDay('2026-04-24', 'strength-b', { week: 4 });
-addDay('2026-04-25', 'aerobic-b', { week: 4 });
-addDay('2026-04-26', 'aerobic-c', { week: 4 });
-addDay('2026-04-27', 'rest', { week: 4 });
-// Week 5 (~20 lbs)
-addDay('2026-04-28', 'strength-a', { week: 5 });
-addDay('2026-04-29', 'aerobic-a', { week: 5 });
-addDay('2026-04-30', 'rest', { week: 5 });
-addDay('2026-05-01', 'strength-b', { week: 5 });
-addDay('2026-05-02', 'aerobic-b', { week: 5 });
-addDay('2026-05-03', 'aerobic-c', { week: 5 });
-addDay('2026-05-04', 'rest', { week: 5 });
-// Week 6
-addDay('2026-05-05', 'strength-a', { week: 6 });
-addDay('2026-05-06', 'aerobic-a', { week: 6 });
-addDay('2026-05-07', 'rest', { week: 6 });
-addDay('2026-05-08', 'strength-b', { week: 6 });
-addDay('2026-05-09', 'aerobic-b', { week: 6 });
-addDay('2026-05-10', 'aerobic-c', { week: 6 });
-addDay('2026-05-11', 'rest', { week: 6, stepTest: 'final' });
-// Taper
-addDay('2026-05-12', 'taper', { week: 7, detail: 'Light walk (15-20 min) + stretch' });
-addDay('2026-05-13', 'taper', { week: 7, detail: 'Light walk (15-20 min) + stretch' });
-addDay('2026-05-14', 'taper', { week: 7, detail: 'Stretch only — pack & prep all gear' });
-addDay('2026-05-15', 'travel', { week: 7 });
-addDay('2026-05-16', 'hike', { week: 7 });
-
-function getLoad(week) {
-  if (week <= 2) return 'Empty backpack';
-  if (week <= 4) return '~10 lbs (half pack)';
-  return '~20 lbs (full pack)';
+function dateStr(d) { 
+  const y = d.getFullYear(), m = String(d.getMonth()+1).padStart(2,'0'), dd = String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${dd}`;
 }
-
-function getAerobicA(week) { return week <= 2 ? '30 min' : week <= 4 ? '45 min' : '60 min'; }
-function getAerobicC(week) { return week <= 2 ? '4 miles (2 loops)' : week <= 4 ? '6 miles (3 loops)' : '8 miles (4 loops)'; }
-
-function fmtDate(d) {
-  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  return `${days[d.getDay()]}, ${months[d.getMonth()]} ${d.getDate()}`;
-}
-
-function dateStr(d) { return d.toISOString().split('T')[0]; }
-
 function addDays(d, n) { const r = new Date(d); r.setDate(r.getDate() + n); return r; }
+function parseDate(s) { const [y,m,d] = s.split('-').map(Number); return new Date(y, m-1, d); }
 
-function renderExercise(ex, week) {
-  const sets = ex.sets_fn ? ex.sets_fn(week) : ex.sets;
+// Schedule
+const S = {};
+function add(date, type, extra={}) { S[date] = { type, ...extra }; }
+
+const weeks = [
+  ['2026-03-31',7,1],['2026-04-07',7,2],['2026-04-14',7,3],
+  ['2026-04-21',7,4],['2026-04-28',7,5],['2026-05-05',7,6]
+];
+const dayTypes = ['strength-a','aerobic-a','rest','strength-b','aerobic-b','aerobic-c','rest'];
+
+weeks.forEach(([start, count, wk]) => {
+  for (let i = 0; i < count; i++) {
+    const d = addDays(parseDate(start), i);
+    add(dateStr(d), dayTypes[i], { week: wk });
+  }
+});
+// Step tests
+S['2026-03-31'].stepTest = 'baseline';
+S['2026-04-20'].stepTest = 'retest';
+S['2026-05-11'].stepTest = 'final';
+// Taper + travel + hike
+add('2026-05-12','taper',{week:7,detail:'Light walk (15-20 min) + full stretch routine'});
+add('2026-05-13','taper',{week:7,detail:'Light walk (15-20 min) + full stretch routine'});
+add('2026-05-14','taper',{week:7,detail:'Stretch only — pack & prep all gear'});
+add('2026-05-15','travel',{week:7});
+add('2026-05-16','hike',{week:7});
+
+// Exercise data
+const STRETCH = [
+  {n:'Cat-Cow',r:'10 reps',c:['Hands & knees → belly drop/lift chest (cow) → round spine/tuck chin (cat)','Inhale cow, exhale cat'],y:'cat+cow+stretch'},
+  {n:'Thoracic Spine Mobilization',r:'6/side',c:['Side-lying, knees stacked 90°. Top arm sweeps open to opposite side','Follow hand with eyes, keep knees together'],y:'thoracic+spine+rotation+mobilization'},
+  {n:'90-90 Hip Stretch',r:'6/side',c:['Sit: front leg 90° in front, back leg 90° behind','Sit tall, lean torso forward over front shin'],y:'90-90+hip+stretch'},
+  {n:'Kneeling Hip Flexor Stretch',r:'6/side',c:['Half-kneel, squeeze back glute, shift hips forward','Stay tall — don\'t arch lower back'],y:'kneeling+hip+flexor+stretch'},
+  {n:'Iron Cross Stretch',r:'6/side',c:['On back, arms in T. Lift leg straight, cross to opposite hand','Keep both shoulders pinned to ground'],y:'iron+cross+stretch+lying'},
+  {n:'Adductor Stretch',r:'6/side',c:['Wide stance, shift weight to one side, bend that knee','Opposite leg straight, chest up'],y:'lateral+adductor+stretch'},
+  {n:'Toe Touches',r:'10 reps',c:['Stand feet together, hinge forward reaching for toes','Slight knee bend OK. Roll up slowly'],y:'standing+toe+touch+stretch'},
+  {n:'Calf Stretch',r:'5/side, hold 15-20s',c:['Face wall, step one foot back, lean in','Keep back heel on floor'],y:'wall+calf+stretch'},
+];
+
+const SA = [
+  {n:'Front Step-ups',s:'3×10/leg',c:['Face 12-16" step with pack. Drive through heel to stand','Don\'t push off back foot — lead leg does the work'],y:'weighted+step+ups+form'},
+  {n:'Lateral Lunge',s:'3×10/leg',c:['Wide step to side, sit hips back and down','Knee tracks over toes, opposite leg straight'],y:'lateral+lunge+exercise+form'},
+  {n:'Lateral Step-Down Touch',s:'2×15/leg',c:['Stand on step sideways. Lower free foot — 3 SEC DESCENT','Tap heel, drive back up. Keep hips level!'],y:'lateral+step+down+touch+eccentric',tip:'Key eccentric exercise for downhill hiking!'},
+  {n:'Unilateral Farmer\'s Carry',sf:w=>`2×${w<=2?'30':w<=4?'60':'90'}s/side`,c:['Hold 20-30 lb in ONE hand. Walk tall','Fight the lean! Shoulders level, core braced'],y:'single+arm+farmer+carry'},
+  {n:'Single-Leg Calf Raises',s:'2×15/leg',c:['On step edge (heel hanging off). Rise high, lower slow','Hold wall for balance. Pack adds load'],y:'single+leg+calf+raise+step'},
+  {n:'Supine Bridge Walk-out',sf:w=>`2×${w<=2?'30':w<=4?'45':'60'}s`,c:['Bridge up, squeeze glutes. Walk feet OUT then back in','Maintain bridge the entire time'],y:'supine+bridge+walkout+glute'},
+  {n:'Front Plank',sf:w=>`3×${w<=2?'30':w<=4?'45':'60'}s`,c:['Forearms + toes, body straight. Don\'t sag or pike','Breathe normally!'],y:'front+plank+proper+form'},
+  {n:'Prone Cobra',sf:w=>`3×${w<=2?'30':w<=4?'45':'60'}s`,c:['Face down. Lift chest + arms, squeeze shoulder blades','Feet stay on ground'],y:'prone+cobra+back+extension'},
+];
+
+const SB = [
+  {n:'Lateral Step-ups',s:'3×10/leg',c:['Stand beside step. Step up sideways, drive through heel','Stand tall on top, step down controlled'],y:'lateral+step+up+exercise'},
+  {n:'Walking Lunge',s:'3×10/leg',c:['Step forward into deep lunge. Both knees ~90°','Drive through front heel. Torso upright'],y:'walking+lunge+weighted+form'},
+  {n:'Front Step-Down Touch',s:'2×15/leg',c:['On step facing forward. Lower free foot FORWARD — 3 SEC DESCENT','Control the lowering — that\'s the whole point'],y:'forward+step+down+eccentric',tip:'Simulates South Kaibab descent!'},
+  {n:'Unilateral Farmer\'s Carry',sf:w=>`2×${w<=2?'30':w<=4?'60':'90'}s/side`,c:['One-arm carry, 20-30 lbs. Walk tall, fight the lean'],y:'single+arm+farmer+carry'},
+  {n:'Single-Leg Calf Raises',s:'2×15/leg',c:['Step edge, full range of motion'],y:'single+leg+calf+raise+step'},
+  {n:'Supine Bridge Walk-outs',sf:w=>`2×${w<=2?'30':w<=4?'45':'60'}s`,c:['Bridge up, walk feet out and in'],y:'supine+bridge+walkout+glute'},
+  {n:'Active Straight Leg Raise',sf:w=>`3×${w<=2?'30':w<=4?'45':'60'}s`,c:['On back, raise both legs ~45°. Hold','Press lower back into ground'],y:'active+straight+leg+raise+core'},
+  {n:'Side Planks',sf:w=>`2×${w<=2?'30':w<=4?'45':'60'}s/side`,c:['Forearm on ground, lift hips. Straight line','Don\'t let hips sag'],y:'side+plank+proper+form'},
+];
+
+const BONUS_A = [
+  {n:'⭐ Pistol Squat Progression',s:'3×5-8/leg',c:['Start: single-leg sit-to-stand from chair','Progress to lower surfaces → eventually no support','Ultimate downhill hiking exercise'],y:'pistol+squat+progression+beginner'},
+  {n:'⭐ Romanian Deadlift',s:'3×10-12',c:['Dumbbells in front, slight knee bend, hinge at hips','Lower along legs → hamstring stretch → squeeze glutes up','Don\'t round your back!'],y:'romanian+deadlift+dumbbell+form'},
+];
+
+const BONUS_B = [
+  {n:'⭐ Bulgarian Split Squat',s:'3×8-10/leg',c:['Rear foot on bench behind you. Deep lunge down','Drive through front heel. Wear your pack'],y:'bulgarian+split+squat+form'},
+  {n:'⭐ Single-Leg RDL',s:'2×8/leg',c:['Stand on one leg, hinge forward, free leg extends back','Builds balance + strength for uneven terrain'],y:'single+leg+romanian+deadlift'},
+];
+
+function getLoad(w) { return w<=2?'Empty backpack':w<=4?'~10 lbs (half pack)':'~20 lbs (full pack)'; }
+function getAA(w) { return w<=2?'30 min':w<=4?'45 min':'60 min'; }
+function getAC(w) { return w<=2?'4 miles (2 loops)':w<=4?'6 miles (3 loops)':'8 miles (4 loops)'; }
+
+function dotClass(type) {
+  if (type.startsWith('strength')) return 'dot-strength';
+  if (type.startsWith('aerobic')) return 'dot-aerobic';
+  if (type === 'rest') return 'dot-rest';
+  if (type === 'taper' || type === 'travel') return 'dot-taper';
+  if (type === 'hike') return 'dot-hike';
+  return '';
+}
+
+function typeLabel(type) {
+  const m = {'strength-a':'Strength A','strength-b':'Strength B','aerobic-a':'Brisk Walk','aerobic-b':'Stair Intervals','aerobic-c':'Distance Hike','rest':'Rest','taper':'Taper','travel':'Travel','hike':'Hike Day'};
+  return m[type]||type;
+}
+
+function renderDateStrip(activeDate) {
+  const today = dateStr(new Date());
+  const allDates = Object.keys(S).sort();
+  let html = '<div class="date-strip"><div class="date-strip-inner" id="dateStrip">';
+  
+  let lastWeek = -1;
+  allDates.forEach(key => {
+    const d = parseDate(key);
+    const day = S[key];
+    const wk = day.week;
+    if (wk !== lastWeek && lastWeek !== -1) html += '<div class="week-separator"></div>';
+    lastWeek = wk;
+    
+    const isActive = key === activeDate;
+    const isToday = key === today;
+    const cls = `date-chip${isActive?' active':''}${isToday&&!isActive?' today':''}`;
+    const dc = day.stepTest ? 'dot-test' : dotClass(day.type);
+    
+    html += `<div class="${cls}" data-date="${key}" onclick="goTo('${key}')">
+      <div class="day-name">${DAYS[d.getDay()]}</div>
+      <div class="day-num">${d.getDate()}</div>
+      <div class="month">${MONTHS[d.getMonth()]}</div>
+      <div class="workout-dot ${dc}"></div>
+    </div>`;
+  });
+  
+  html += '</div></div>';
+  return html;
+}
+
+function renderEx(ex, w) {
+  const sets = ex.sf ? ex.sf(w) : ex.s;
   return `<div class="exercise">
-    <h4>${ex.name}</h4>
-    <div class="sets">${sets}</div>
-    ${ex.tip ? `<div class="tip">${ex.tip}</div>` : ''}
-    <ul class="cues">${ex.cues.map(c => `<li>${c}</li>`).join('')}</ul>
-    <a class="video-link" href="https://www.youtube.com/results?search_query=${ex.yt}" target="_blank">▶ Demo</a>
+    <h4>${ex.n}</h4><div class="sets">${sets}</div>
+    ${ex.tip?`<div class="tip">${ex.tip}</div>`:''}
+    <ul class="cues">${ex.c.map(c=>`<li>${c}</li>`).join('')}</ul>
+    <a class="video-link" href="https://www.youtube.com/results?search_query=${ex.y}" target="_blank">▶ Demo</a>
   </div>`;
 }
 
+function renderStretch(w) {
+  return STRETCH.map(s => `<div class="exercise">
+    <h4>${s.n}</h4><div class="sets">${s.r}</div>
+    <ul class="cues">${s.c.map(c=>`<li>${c}</li>`).join('')}</ul>
+    <a class="video-link" href="https://www.youtube.com/results?search_query=${s.y}" target="_blank">▶ Demo</a>
+  </div>`).join('');
+}
+
 function renderStepTest(type) {
-  const labels = { baseline: 'Baseline Test', retest: '3-Week Retest', final: 'Final Test' };
+  const labels = {baseline:'Baseline Test',retest:'3-Week Retest',final:'Final Test'};
   return `<div class="test-card">
     <h3>📋 YMCA Step Test — ${labels[type]}</h3>
-    <p><strong>Equipment:</strong> 12" step · stopwatch · metronome at 96 BPM</p>
-    <ol>
-      <li>Set metronome to 96 BPM</li>
-      <li>Step up/down: <strong>up, up, down, down</strong></li>
-      <li>Continue for 3 minutes</li>
-      <li>Immediately sit down</li>
-      <li>Count pulse for 60 seconds</li>
-    </ol>
-    <h4 style="margin-top:0.8rem;">Your Targets (Male, 36-45)</h4>
-    <table>
-      <tr><td>🏆 Excellent</td><td><strong>&lt; 76 bpm</strong></td></tr>
-      <tr><td>✅ Good</td><td><strong>80-88</strong></td></tr>
-      <tr><td>👍 Above Avg</td><td><strong>89-98</strong></td></tr>
-      <tr><td>➡️ Average</td><td><strong>100-105</strong></td></tr>
-    </table>
+    <p><strong>Equip:</strong> 12" step · stopwatch · metronome @ 96 BPM</p>
+    <ol><li>Metronome to 96 BPM</li><li>Step: <strong>up, up, down, down</strong></li><li>3 minutes</li><li>Immediately sit</li><li>Count pulse 60 sec</li></ol>
+    <table><tr><td>🏆 Excellent</td><td><strong>&lt;76</strong></td></tr><tr><td>✅ Good</td><td><strong>80-88</strong></td></tr><tr><td>👍 Above Avg</td><td><strong>89-98</strong></td></tr><tr><td>➡️ Average</td><td><strong>100-105</strong></td></tr></table>
   </div>`;
 }
 
 function renderDay(dateKey) {
-  const day = SCHEDULE[dateKey];
-  if (!day) return `<section><h2>No workout scheduled for this date</h2><div class="overview-link"><a href="?">← Full Schedule</a></div></section>`;
-  
-  const d = new Date(dateKey + 'T12:00:00');
+  const day = S[dateKey];
+  if (!day) return renderHome();
+  const d = parseDate(dateKey);
   const w = day.week;
   const load = getLoad(w);
-  const totalDays = Math.floor((d - PROGRAM_START) / 86400000);
-  const progress = Math.min(100, Math.max(0, (totalDays / 46) * 100));
+  const totalDays = Math.round((d - new Date('2026-03-31')) / 86400000);
+  const progress = Math.min(100, Math.max(0, (totalDays/46)*100));
   const dayInWeek = (totalDays % 7) + 1;
 
   let html = `<header>
     <h1>⛰️ Grand Canyon Training</h1>
-    <p class="sub">${fmtDate(d)}</p>
-    <span class="badge badge-week">Week ${Math.min(w,6)} · Day ${dayInWeek}</span>
-    ${w <= 6 ? `<span class="badge badge-load">${load}</span>` : ''}
     <div class="progress-bar"><div class="fill" style="width:${progress}%"></div></div>
   </header>`;
-
-  // Nav
-  const prev = addDays(d, -1);
-  const next = addDays(d, 1);
-  const prevKey = dateStr(prev);
-  const nextKey = dateStr(next);
-  html += `<div class="day-nav">
-    ${SCHEDULE[prevKey] ? `<a href="?date=${prevKey}">← ${prev.getDate()}</a>` : '<span></span>'}
-    <a href="?" style="font-size:0.8rem;">All Days</a>
-    ${SCHEDULE[nextKey] ? `<a href="?date=${nextKey}">${next.getDate()} →</a>` : '<span></span>'}
+  
+  html += renderDateStrip(dateKey);
+  
+  html += `<div class="info-bar">
+    <span class="info-badge info-week">Week ${Math.min(w,6)} · Day ${dayInWeek}</span>
+    <span class="info-badge info-type">${typeLabel(day.type)}</span>
+    ${w<=6?`<span class="info-badge info-load">${load}</span>`:''}
   </div>`;
 
   html += '<section>';
 
   if (day.type === 'rest') {
-    html += `<div class="rest-card"><h2>😴 Rest Day</h2><p>Light walking and stretching OK. Focus on recovery, hydration, and nutrition.</p></div>`;
+    html += `<div class="rest-card"><h2>😴 Rest Day</h2><p>Light walking and stretching OK.<br>Focus on recovery, hydration, and nutrition.</p></div>`;
     if (day.stepTest) html += renderStepTest(day.stepTest);
   } else if (day.type === 'taper') {
-    html += `<div class="taper-card"><h2>🧘 Taper</h2><p>${day.detail}</p><p style="margin-top:0.5rem;color:var(--muted);">Body is ready — just maintain and recover.</p></div>`;
-    html += '<h2>Stretching Routine</h2>';
-    STRETCH.forEach(s => { html += renderExercise(s, w); });
+    html += `<div class="taper-card"><h2>🧘 Taper</h2><p>${day.detail}</p><p style="margin-top:0.5rem;color:var(--muted);">Body is ready — just maintain.</p></div>`;
+    html += '<h2>🧘 Stretching Routine</h2>' + renderStretch(w);
   } else if (day.type === 'travel') {
-    html += `<div class="taper-card"><h2>🚗 Travel Day</h2><p>Stay hydrated. Light stretching if possible. Rest up — tomorrow it begins!</p></div>`;
+    html += `<div class="taper-card"><h2>🚗 Travel Day</h2><p>Stay hydrated. Light stretching. Rest up — tomorrow it begins!</p></div>`;
   } else if (day.type === 'hike') {
-    html += `<div class="hike-card"><h2>⛰️ HIKE DAY</h2><p><strong>South Kaibab Descent</strong></p><p style="margin-top:0.5rem;">You trained for this. Trust the preparation. Have an incredible time. 🏔️</p></div>`;
+    html += `<div class="hike-card"><h2>⛰️ HIKE DAY</h2><p><strong>South Kaibab Descent</strong></p><p style="margin-top:0.5rem;">You trained for this. Trust the prep. 🏔️</p></div>`;
   } else if (day.type === 'strength-a') {
-    html += '<h2>🧘 Stretching (do first)</h2>';
-    STRETCH.forEach(s => { html += renderExercise(s, w); });
-    html += `<h2>🏋️ Strength A <span style="font-weight:400;font-size:0.9rem;color:var(--muted);">(${load})</span></h2>`;
-    STRENGTH_A.forEach(ex => { html += renderExercise(ex, w); });
-    html += `<h2>⭐ Bonus Exercises</h2><p style="color:var(--muted);font-size:0.9rem;margin-bottom:0.5rem;">Add pistol squats + RDLs on Strength A days</p>`;
-    html += renderExercise(BONUS[0], w);
-    html += renderExercise(BONUS[2], w);
+    html += '<h2>🧘 Stretching (do first)</h2>' + renderStretch(w);
+    html += `<h2>🏋️ Strength A <span style="font-weight:400;font-size:0.85rem;color:var(--muted);">${load}</span></h2>`;
+    SA.forEach(ex => html += renderEx(ex, w));
+    html += '<h2>⭐ Bonus</h2>';
+    BONUS_A.forEach(ex => html += renderEx(ex, w));
     if (day.stepTest) html += renderStepTest(day.stepTest);
   } else if (day.type === 'strength-b') {
-    html += '<h2>🧘 Stretching (do first)</h2>';
-    STRETCH.forEach(s => { html += renderExercise(s, w); });
-    html += `<h2>🏋️ Strength B <span style="font-weight:400;font-size:0.9rem;color:var(--muted);">(${load})</span></h2>`;
-    STRENGTH_B.forEach(ex => { html += renderExercise(ex, w); });
-    html += `<h2>⭐ Bonus Exercises</h2><p style="color:var(--muted);font-size:0.9rem;margin-bottom:0.5rem;">Add Bulgarian split squats + single-leg RDLs on Strength B days</p>`;
-    html += renderExercise(BONUS[1], w);
-    html += renderExercise(BONUS[3], w);
+    html += '<h2>🧘 Stretching (do first)</h2>' + renderStretch(w);
+    html += `<h2>🏋️ Strength B <span style="font-weight:400;font-size:0.85rem;color:var(--muted);">${load}</span></h2>`;
+    SB.forEach(ex => html += renderEx(ex, w));
+    html += '<h2>⭐ Bonus</h2>';
+    BONUS_B.forEach(ex => html += renderEx(ex, w));
   } else if (day.type === 'aerobic-a') {
-    html += '<h2>🧘 Stretching (do first)</h2>';
-    STRETCH.forEach(s => { html += renderExercise(s, w); });
+    html += '<h2>🧘 Stretching (do first)</h2>' + renderStretch(w);
     html += `<h2>🚶 Aerobic A — Brisk Walk</h2>
     <div class="exercise" style="border-left-color:var(--accent);">
-      <h4>${getAerobicA(w)} brisk walk</h4>
-      <div class="sets">${load}</div>
-      <ul class="cues">
-        <li>Wear backpack + hiking shoes</li>
-        <li>Maintain consistent movement — no stopping</li>
-        <li>Pace: fast enough to elevate HR & breathing, not so fast you must stop</li>
-        <li>Conversational pace — you can talk but it's effort</li>
-      </ul>
+      <h4>${getAA(w)} brisk walk</h4><div class="sets">${load}</div>
+      <ul class="cues"><li>Backpack + hiking shoes, no stopping</li><li>Fast enough to elevate HR, not so fast you must stop</li><li>Conversational pace</li></ul>
     </div>`;
   } else if (day.type === 'aerobic-b') {
-    html += '<h2>🧘 Stretching (do first)</h2>';
-    STRETCH.forEach(s => { html += renderExercise(s, w); });
+    html += '<h2>🧘 Stretching (do first)</h2>' + renderStretch(w);
     html += `<h2>🪜 Aerobic B — Stair Intervals</h2>
     <div class="exercise" style="border-left-color:var(--accent);">
-      <h4>10 × 60-second stair intervals</h4>
-      <div class="sets">${load} · 2 min rest between rounds</div>
-      <ul class="cues">
-        <li>Find stairs covering 2-3 floors</li>
-        <li>Wear backpack + hiking shoes</li>
-        <li>Up and down at rapid, consistent pace for 60 seconds</li>
-        <li>Rest 2 minutes</li>
-        <li>Repeat × 10 rounds</li>
-      </ul>
+      <h4>10 × 60s stair intervals</h4><div class="sets">${load} · 2 min rest between</div>
+      <ul class="cues"><li>Find 2-3 floor staircase</li><li>Backpack + hiking shoes</li><li>Up/down at rapid pace for 60s → rest 2 min → repeat ×10</li></ul>
     </div>
-    <div class="tip">CARRY your pack in your arms (not on back) to build upper body strength for loading/unloading gear!</div>`;
+    <div class="tip">CARRY pack in your arms (not on back) for upper body strength!</div>`;
   } else if (day.type === 'aerobic-c') {
-    html += '<h2>🧘 Stretching (do first)</h2>';
-    STRETCH.forEach(s => { html += renderExercise(s, w); });
+    html += '<h2>🧘 Stretching (do first)</h2>' + renderStretch(w);
     html += `<h2>🥾 Aerobic C — Distance Hike</h2>
     <div class="exercise" style="border-left-color:var(--accent);">
-      <h4>${getAerobicC(w)} — Young Man Trail</h4>
-      <div class="sets">Pack at trip weight · South Mountain</div>
-      <ul class="cues">
-        <li>Wear backpack + hiking shoes, pack close to trip weight</li>
-        <li>Emphasis on DISTANCE — speed doesn't matter</li>
-        <li>Stops are OK — just complete the full mileage</li>
-        <li>Trail = ~2 mi / 894 ft gain per loop</li>
-      </ul>
+      <h4>${getAC(w)} — Young Man Trail</h4><div class="sets">Pack at trip weight · South Mountain</div>
+      <ul class="cues"><li>Backpack + hiking shoes, trip weight</li><li>DISTANCE over speed. Stops OK</li><li>Trail = ~2 mi / 894 ft per loop</li></ul>
     </div>`;
   }
 
-  html += `<div class="overview-link"><a href="?">← Full Schedule Overview</a></div>`;
   html += '</section>';
   return html;
 }
 
-function renderOverview() {
+function renderHome() {
+  const today = dateStr(new Date());
   let html = `<header>
     <h1>⛰️ Grand Canyon Training</h1>
     <p class="sub">6-Week Program · May 16 Departure</p>
-  </header><section>`;
+  </header>`;
   
-  const weeks = [
-    { num: 1, start: '2026-03-31', load: 'No load' },
-    { num: 2, start: '2026-04-07', load: 'No load' },
-    { num: 3, start: '2026-04-14', load: '~10 lbs' },
-    { num: 4, start: '2026-04-21', load: '~10 lbs' },
-    { num: 5, start: '2026-04-28', load: '~20 lbs' },
-    { num: 6, start: '2026-05-05', load: '~20 lbs' },
-    { num: 7, start: '2026-05-12', load: 'Taper' },
-  ];
+  html += renderDateStrip(null);
+  
+  html += '<section>';
+  
+  // If today is in the schedule, show a "Go to Today" button
+  if (S[today]) {
+    html += `<button class="today-btn" onclick="goTo('${today}')">📍 Today's Workout</button>`;
+  }
 
-  const typeLabels = {
-    'strength-a': '🏋️ Strength A',
-    'strength-b': '🏋️ Strength B',
-    'aerobic-a': '🚶 Walk',
-    'aerobic-b': '🪜 Stairs',
-    'aerobic-c': '🥾 Hike',
-    'rest': '😴 Rest',
-    'taper': '🧘 Taper',
-    'travel': '🚗 Travel',
-    'hike': '⛰️ HIKE',
-  };
+  // Legend
+  html += `<div style="display:flex;gap:0.8rem;justify-content:center;flex-wrap:wrap;margin:1rem 0;font-size:0.75rem;color:var(--muted);">
+    <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#4caf50;margin-right:3px;"></span>Strength</span>
+    <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#2196f3;margin-right:3px;"></span>Aerobic</span>
+    <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#ff9800;margin-right:3px;"></span>Step Test</span>
+    <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#9c27b0;margin-right:3px;"></span>Taper</span>
+    <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#f44336;margin-right:3px;"></span>Hike!</span>
+  </div>`;
 
-  const today = dateStr(new Date());
-
-  weeks.forEach(wk => {
-    html += `<h2>Week ${wk.num} ${wk.num <= 6 ? `<span style="font-weight:400;font-size:0.9rem;color:var(--muted);">${wk.load}</span>` : ''}</h2>`;
-    for (let i = 0; i < 7; i++) {
-      const d = addDays(new Date(wk.start + 'T12:00:00'), i);
+  // Week cards
+  const weekStarts = ['2026-03-31','2026-04-07','2026-04-14','2026-04-21','2026-04-28','2026-05-05','2026-05-12'];
+  const weekLoads = ['No load','No load','~10 lbs','~10 lbs','~20 lbs','~20 lbs','Taper'];
+  
+  weekStarts.forEach((ws, i) => {
+    html += `<h2>Week ${i+1} <span style="font-weight:400;font-size:0.85rem;color:var(--muted);">${weekLoads[i]}</span></h2>`;
+    for (let j = 0; j < 7; j++) {
+      const d = addDays(parseDate(ws), j);
       const key = dateStr(d);
-      const day = SCHEDULE[key];
-      if (!day) continue;
+      if (!S[key]) continue;
+      const day = S[key];
       const isToday = key === today;
-      const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-      const months = ['Jan','Feb','Mar','Apr','May'];
-      html += `<a href="?date=${key}" style="display:block;text-decoration:none;color:inherit;background:${isToday ? '#e8f5e9' : 'white'};border-radius:10px;padding:0.6rem 0.8rem;margin:0.3rem 0;box-shadow:0 1px 3px rgba(0,0,0,0.06);border-left:4px solid ${isToday ? 'var(--green)' : '#ddd'};">
-        <div style="display:flex;justify-content:space-between;align-items:center;">
-          <div>
-            <strong style="font-size:0.9rem;">${days[d.getDay()]} ${months[d.getMonth()]} ${d.getDate()}</strong>
-            ${isToday ? '<span style="background:var(--green);color:white;padding:0.1rem 0.4rem;border-radius:10px;font-size:0.7rem;margin-left:0.3rem;">TODAY</span>' : ''}
-          </div>
-          <span style="font-size:0.85rem;">${typeLabels[day.type] || day.type}</span>
+      html += `<div onclick="goTo('${key}')" style="display:flex;justify-content:space-between;align-items:center;background:${isToday?'#e8f5e9':'white'};border-radius:10px;padding:0.55rem 0.8rem;margin:0.25rem 0;box-shadow:0 1px 3px rgba(0,0,0,0.05);cursor:pointer;border-left:4px solid ${isToday?'var(--green)':'#ddd'};">
+        <div>
+          <strong style="font-size:0.88rem;">${DAYS[d.getDay()]} ${MONTHS[d.getMonth()]} ${d.getDate()}</strong>
+          ${isToday?'<span style="background:var(--green);color:white;padding:0.1rem 0.4rem;border-radius:10px;font-size:0.68rem;margin-left:0.3rem;">TODAY</span>':''}
         </div>
-        ${day.stepTest ? '<div style="font-size:0.8rem;color:var(--accent);margin-top:0.2rem;">📋 Step Test</div>' : ''}
-      </a>`;
+        <span style="font-size:0.82rem;color:var(--muted);">${typeLabel(day.type)}${day.stepTest?' 📋':''}</span>
+      </div>`;
     }
   });
 
@@ -383,10 +363,28 @@ function renderOverview() {
   return html;
 }
 
-// Route
-const params = new URLSearchParams(window.location.search);
-const dateParam = params.get('date');
-document.getElementById('app').innerHTML = dateParam ? renderDay(dateParam) : renderOverview();
+function goTo(date) {
+  history.pushState({date}, '', date ? `?date=${date}` : '?');
+  render();
+}
+
+function render() {
+  const params = new URLSearchParams(window.location.search);
+  const dateParam = params.get('date');
+  document.getElementById('app').innerHTML = dateParam && S[dateParam] ? renderDay(dateParam) : renderHome();
+  
+  // Scroll active date into view
+  setTimeout(() => {
+    const strip = document.getElementById('dateStrip');
+    const active = strip && strip.querySelector('.active, .today');
+    if (active && strip) {
+      active.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    }
+  }, 100);
+}
+
+window.addEventListener('popstate', render);
+render();
 </script>
 </body>
 </html>
