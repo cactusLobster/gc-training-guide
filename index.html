@@ -135,7 +135,7 @@ const SA = [
   {n:'Front Step-ups',s:'3×10/leg',c:['Face 12-16" step with pack. Drive through heel to stand','Don\'t push off back foot — lead leg does the work'],y:'weighted+step+ups+form'},
   {n:'Lateral Lunge',s:'3×10/leg',c:['Wide step to side, sit hips back and down','Knee tracks over toes, opposite leg straight'],y:'lateral+lunge+exercise+form'},
   {n:'Lateral Step-Down Touch',s:'2×15/leg',c:['Stand on step sideways. Lower free foot — 3 SEC DESCENT','Tap heel, drive back up. Keep hips level!'],y:'lateral+step+down+touch+eccentric',tip:'Key eccentric exercise for downhill hiking!'},
-  {n:'Unilateral Farmer\'s Carry',sf:w=>`2×${w<=2?'30':w<=4?'60':'90'}s/side`,c:['Hold 20-30 lb in ONE hand. Walk tall','Fight the lean! Shoulders level, core braced'],y:'single+arm+farmer+carry'},
+  {n:'Unilateral KB Farmer\'s Carry',sf:w=>`2×${w<=2?'30':w<=4?'60':'90'}s/side`,c:['Use the 35 lb kettlebell first; progress to 50 lb when clean. Walk tall','Fight the lean! Shoulders level, core braced'],y:'single+arm+kettlebell+farmer+carry'},
   {n:'Single-Leg Calf Raises',s:'2×15/leg',c:['On step edge (heel hanging off). Rise high, lower slow','Hold wall for balance. Pack adds load'],y:'single+leg+calf+raise+step'},
   {n:'Supine Bridge Walk-out',sf:w=>`2×${w<=2?'30':w<=4?'45':'60'}s`,c:['Bridge up, squeeze glutes. Walk feet OUT then back in','Maintain bridge the entire time'],y:'supine+bridge+walkout+glute'},
   {n:'Front Plank',sf:w=>`3×${w<=2?'30':w<=4?'45':'60'}s`,c:['Forearms + toes, body straight. Don\'t sag or pike','Breathe normally!'],y:'front+plank+proper+form'},
@@ -144,9 +144,9 @@ const SA = [
 
 const SB = [
   {n:'Lateral Step-ups',s:'3×10/leg',c:['Stand beside step. Step up sideways, drive through heel','Stand tall on top, step down controlled'],y:'lateral+step+up+exercise'},
-  {n:'Walking Lunge',s:'3×10/leg',c:['Step forward into deep lunge. Both knees ~90°','Drive through front heel. Torso upright'],y:'walking+lunge+weighted+form'},
+  {n:'Vest or Goblet Walking Lunge',s:'3×10/leg',c:['Use bodyweight/vest, or hold one kettlebell goblet-style. No dumbbell pair needed','Step forward into deep lunge. Drive through front heel. Torso upright'],y:'walking+lunge+weighted+form'},
   {n:'Front Step-Down Touch',s:'2×15/leg',c:['On step facing forward. Lower free foot FORWARD — 3 SEC DESCENT','Control the lowering — that\'s the whole point'],y:'forward+step+down+eccentric',tip:'Simulates South Kaibab descent!'},
-  {n:'Unilateral Farmer\'s Carry',sf:w=>`2×${w<=2?'30':w<=4?'60':'90'}s/side`,c:['One-arm carry, 20-30 lbs. Walk tall, fight the lean'],y:'single+arm+farmer+carry'},
+  {n:'Unilateral KB Farmer\'s Carry',sf:w=>`2×${w<=2?'30':w<=4?'60':'90'}s/side`,c:['One-arm carry with 35 lb or 50 lb kettlebell. Walk tall, fight the lean'],y:'single+arm+kettlebell+farmer+carry'},
   {n:'Single-Leg Calf Raises',s:'2×15/leg',c:['Step edge, full range of motion'],y:'single+leg+calf+raise+step'},
   {n:'Supine Bridge Walk-outs',sf:w=>`2×${w<=2?'30':w<=4?'45':'60'}s`,c:['Bridge up, walk feet out and in'],y:'supine+bridge+walkout+glute'},
   {n:'Active Straight Leg Raise',sf:w=>`3×${w<=2?'30':w<=4?'45':'60'}s`,c:['On back, raise both legs ~45°. Hold','Press lower back into ground'],y:'active+straight+leg+raise+core'},
@@ -154,13 +154,13 @@ const SB = [
 ];
 
 const BONUS_A = [
-  {n:'⭐ Pistol Squat Progression',s:'3×5-8/leg',c:['Start: single-leg sit-to-stand from chair','Progress to lower surfaces → eventually no support','Ultimate downhill hiking exercise'],y:'pistol+squat+progression+beginner'},
-  {n:'⭐ Romanian Deadlift',s:'3×10-12',c:['Dumbbells in front, slight knee bend, hinge at hips','Lower along legs → hamstring stretch → squeeze glutes up','Don\'t round your back!'],y:'romanian+deadlift+dumbbell+form'},
+  {n:'⭐ TRX-Assisted Pistol Squat Progression',s:'3×5-8/leg',c:['Use TRX straps from the ceiling for balance/assistance','Start: single-leg sit-to-stand from chair. Progress to lower surfaces','Add vest only when control is clean'],y:'trx+assisted+pistol+squat+progression'},
+  {n:'⭐ Kettlebell Romanian Deadlift',s:'3×10-12',c:['Use one kettlebell: 35 lb first, 50 lb when form is crisp','Hold KB by horns/handle in front, soft knees, hinge at hips','Lower between/along legs → hamstring stretch → squeeze glutes up. Don\'t round your back!'],y:'kettlebell+romanian+deadlift+form'},
 ];
 
 const BONUS_B = [
-  {n:'⭐ Bulgarian Split Squat',s:'3×8-10/leg',c:['Rear foot on bench behind you. Deep lunge down','Drive through front heel. Wear your pack'],y:'bulgarian+split+squat+form'},
-  {n:'⭐ Single-Leg RDL',s:'2×8/leg',c:['Stand on one leg, hinge forward, free leg extends back','Builds balance + strength for uneven terrain'],y:'single+leg+romanian+deadlift'},
+  {n:'⭐ Bulgarian Split Squat',s:'3×8-10/leg',c:['Rear foot on bench behind you. Deep lunge down','Drive through front heel. Wear vest/pack or hold one kettlebell goblet-style'],y:'bulgarian+split+squat+form'},
+  {n:'⭐ TRX-Assisted Single-Leg Hinge',s:'2×8/leg',c:['Use TRX lightly for balance; hinge on one leg, free leg extends back','Bodyweight first. Add the 35 lb kettlebell in opposite hand only if stable','Builds balance + strength for uneven terrain'],y:'trx+single+leg+romanian+deadlift'},
 ];
 
 function getLoad(w) { return w<=2?'Empty backpack':w<=4?'~10 lbs (half pack)':'~20 lbs (full pack)'; }
